@@ -13,6 +13,18 @@ Task("Version")
         versionInfo = GitVersion(new GitVersionSettings {
             UpdateAssemblyInfo = false
         });
+
+        Information($"Version: {versionInfo.SemVer}");
+
+        var envFile = EnvironmentVariable("GITHUB_OUTPUT");
+        Information($"GITHUB_OUTPUT file: {envFile}");
+        if (!string.IsNullOrEmpty(envFile))
+        {
+            Information("Writing version to output.");
+            System.IO.File.AppendAllText(envFile, $"version={versionInfo.SemVer}\r\n");
+        }
+
+        //Information($"::set-output name=version::{versionInfo.SemVer}");
     });
 
 Task("Clean")
