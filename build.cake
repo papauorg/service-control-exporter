@@ -23,8 +23,6 @@ Task("Version")
             Information("Writing version to output.");
             System.IO.File.AppendAllText(envFile, $"version={versionInfo.SemVer}\r\n");
         }
-
-        //Information($"::set-output name=version::{versionInfo.SemVer}");
     });
 
 Task("Clean")

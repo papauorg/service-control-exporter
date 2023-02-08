@@ -19,14 +19,14 @@ internal class ServiceControlMeter
         ObservableMetrics = observableMetrics ?? throw new ArgumentNullException(nameof(observableMetrics));
 
         Meter = new(ServiceControlMeter.NAME, "1.0");
-        ErrorMessagesPerEndpoint = Meter.CreateObservableGauge("ErrorMessagesPerEndpoint", () => ToMeasurements(ObservableMetrics.MessagesPerEndpoint), unit: "Messages", description: "Shows the amount of error messages per endpoint that require manual review.");
-        ErrorMessagesPerMessageType = Meter.CreateObservableGauge("ErrorMessagesPerType", () => ToMeasurements(ObservableMetrics.MessagesPerMessageType), unit: "Messages", description: "Shows the amount of error messages per message type that require manual review.");
+        ErrorMessagesPerEndpoint = Meter.CreateObservableGauge("ErrorMessagesPerEndpoint", () => ToMeasurements(ObservableMetrics.MessagesPerEndpoint, "endpoint"), unit: "Messages", description: "Shows the amount of error messages per endpoint that require manual review.");
+        ErrorMessagesPerMessageType = Meter.CreateObservableGauge("ErrorMessagesPerType", () => ToMeasurements(ObservableMetrics.MessagesPerMessageType, "type"), unit: "Messages", description: "Shows the amount of error messages per message type that require manual review.");
     }
 
-    private static IEnumerable<Measurement<int>> ToMeasurements(IEnumerable<EndpointGroup> endpointGroups)
+    private static IEnumerable<Measurement<int>> ToMeasurements(IEnumerable<EndpointGroup> endpointGroups, string tagName)
     {
         return endpointGroups
-            .Select(s => new Measurement<int>(s.Count, new KeyValuePair<string, object?>[] {new("endpoint", s.Title)}))
+            .Select(s => new Measurement<int>(s.Count, new KeyValuePair<string, object?>[] {new(tagName, s.Title)}))
             .DefaultIfEmpty(new Measurement<int>(0));
     }
 }
