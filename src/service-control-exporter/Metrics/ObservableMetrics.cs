@@ -4,7 +4,7 @@ using ServiceControlExporter.ServiceControl;
 
 namespace ServiceControlExporter.Metrics;
 
-internal sealed class ObservableMetrics
+public sealed class ObservableMetrics
 {
     public IReadOnlyList<EndpointGroup> MessagesPerEndpoint { get; private set; } = Array.Empty<EndpointGroup>();
     public IReadOnlyList<EndpointGroup> MessagesPerMessageType { get; private set; } = Array.Empty<EndpointGroup>();

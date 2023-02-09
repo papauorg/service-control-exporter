@@ -31,9 +31,21 @@ Task("Clean")
         EnsureDirectoryDoesNotExist("./artifacts");
     });
 
-Task("Package")
-    .IsDependentOn("Version")
+Task("Test")
+    .Description("Executes tests")
     .IsDependentOn("Clean")
+    .IsDependentOn("Version")
+    .Does(() => {
+        var dotnetTestSettings = new DotNetTestSettings
+        {
+            Configuration = configuration,
+        };
+
+        DotNetTest(SOLUTION_FILE, dotnetTestSettings);
+    });
+
+Task("Package")
+    .IsDependentOn("Test")
     .Description("Creates packages for the exporter.")
     .Does(() => {
         var msBuildSettings = new DotNetMSBuildSettings()

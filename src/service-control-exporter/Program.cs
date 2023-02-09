@@ -8,8 +8,6 @@ using ServiceControlExporter.Infrastructure;
 using ServiceControlExporter.Metrics;
 using ServiceControlExporter.ServiceControl;
 
-using Microsoft.Extensions.Hosting;
-
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
@@ -45,3 +43,6 @@ var meter = app.Services.GetRequiredService<ServiceControlMeter>();
 
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
 app.Run();
+
+
+public partial class Program {}
