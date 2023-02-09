@@ -27,7 +27,7 @@ public class ServiceControlPollBackgroundService : BackgroundService
 
         var timer = new PeriodicTimer(Options.RequestInterval);
 
-        while (await timer.WaitForNextTickAsync(stoppingToken))
+        do
         {
             Logger.LogDebug("Attempting to update metrics from ServiceControl.");
             try
@@ -41,7 +41,7 @@ public class ServiceControlPollBackgroundService : BackgroundService
             {
                 Logger.LogError(ex, "Can't update metrics from ServiceControl.");
             }
-        }
+        } while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false));
     }
 }
 
