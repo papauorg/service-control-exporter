@@ -61,7 +61,7 @@ Task("Package")
             OutputDirectory = "./artifacts/win/",
             MSBuildSettings = msBuildSettings
         };
-        DotNetPublish(SOLUTION_FILE, nugetPackageBuildSettings);
+        DotNetPublish("./src/service-control-exporter/service-control-exporter.csproj", nugetPackageBuildSettings);
 
         Zip("./artifacts/win/", $"./artifacts/service-control-exporter.{versionInfo.SemVer}.zip");
     });
