@@ -5,8 +5,8 @@ namespace ServiceControlExporter.Tests.Integration;
 
 public class IntegrationTest
 {
-    protected ServiceControlExporterWebApplicationFactory ServiceControlExporterWebApplicationFactory { get; private set; } = null;
-    protected HttpClient ServiceControlExporterClient { get; private set; } = null;
+    protected ServiceControlExporterWebApplicationFactory ServiceControlExporterWebApplicationFactory { get; private set; }
+    protected HttpClient ServiceControlExporterClient { get; private set; }
 
     protected void SetupApplication()
     {

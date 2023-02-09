@@ -23,10 +23,9 @@ internal class ServiceControlMeter
         ErrorMessagesPerMessageType = Meter.CreateObservableGauge("ErrorMessagesPerType", () => ToMeasurements(ObservableMetrics.MessagesPerMessageType, "type"), unit: "Messages", description: "Shows the amount of error messages per message type that require manual review.");
     }
 
-    private static IEnumerable<Measurement<int>> ToMeasurements(IEnumerable<EndpointGroup> endpointGroups, string tagName)
+    private static IEnumerable<Measurement<int>> ToMeasurements(ConcurrentDictionary<string, int> endpointGroups, string tagName)
     {
         return endpointGroups
-            .Select(s => new Measurement<int>(s.Count, new KeyValuePair<string, object?>[] {new(tagName, s.Title)}))
-            .DefaultIfEmpty(new Measurement<int>(0));
+            .Select(s => new Measurement<int>(s.Value, new KeyValuePair<string, object?>[] {new(tagName, s.Key)}));
     }
 }

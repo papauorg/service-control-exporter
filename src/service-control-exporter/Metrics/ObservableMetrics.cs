@@ -1,13 +1,13 @@
 using System.Diagnostics.Metrics;
-
+using System.Collections.Concurrent;
 using ServiceControlExporter.ServiceControl;
 
 namespace ServiceControlExporter.Metrics;
 
 public sealed class ObservableMetrics
 {
-    public IReadOnlyList<EndpointGroup> MessagesPerEndpoint { get; private set; } = Array.Empty<EndpointGroup>();
-    public IReadOnlyList<EndpointGroup> MessagesPerMessageType { get; private set; } = Array.Empty<EndpointGroup>();
+    public ConcurrentDictionary<string, int> MessagesPerEndpoint { get; } = new ConcurrentDictionary<string, int>();
+    public ConcurrentDictionary<string, int> MessagesPerMessageType { get; } = new ConcurrentDictionary<string, int>();
 
     public IServiceControlApi ServiceControlApi { get; }
     public ILogger<ObservableMetrics> Logger { get; }
@@ -20,8 +20,28 @@ public sealed class ObservableMetrics
 
     public async Task Update(CancellationToken cancellationToken)
     {
-       MessagesPerEndpoint = await GetErrorMessagesCounterPerEndpoint().ConfigureAwait(false);
-       MessagesPerMessageType = await GetErrorMessagesCounterPerType().ConfigureAwait(false);
+       var perEndpointList = await GetErrorMessagesCounterPerEndpoint().ConfigureAwait(false);
+       UpdateDictionary(MessagesPerEndpoint, perEndpointList);
+
+       var perMessageTypeList = await GetErrorMessagesCounterPerType().ConfigureAwait(false);
+       UpdateDictionary(MessagesPerMessageType, perMessageTypeList);
+    }
+
+    private void UpdateDictionary(ConcurrentDictionary<string, int> dict, IEnumerable<EndpointGroup> updatedValues)
+    {
+        var existingKeys = dict.Keys;
+        var updatedKeys = updatedValues.Select(u => u.Title).ToArray();
+        var allKeys = existingKeys.Union(updatedKeys);
+
+        foreach(var key in allKeys)
+        {
+            // reset count of messages for a given title to 0 in case it is no longer
+            // returned by the ServiceControl api. Otherwise the initial count of messages
+            // would remain the same after messages are deleted or resolved in ServicePulse
+            EndpointGroup groupValue = new EndpointGroup { Title = key, Count = 0 };
+            groupValue = updatedValues.SingleOrDefault(u => u.Title.Equals(key, StringComparison.Ordinal)) ?? groupValue;
+            dict.AddOrUpdate(key, groupValue.Count, (key, oldValue) => groupValue.Count);
+        }
     }
 
     private async Task<EndpointGroup[]> GetErrorMessagesCounterPerType()

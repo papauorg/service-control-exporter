@@ -32,7 +32,10 @@ builder.Services.AddHttpClient(ServiceControlApi.HTTP_CLIENT_NAME, c => {
 // Add services to the container.
 builder.Services.AddOpenTelemetry()
     .WithMetrics(builder => builder
-        .AddPrometheusExporter()
+        .AddPrometheusExporter(e => 
+        {
+            e.ScrapeResponseCacheDurationMilliseconds = 0;
+        })
         .AddMeter(ServiceControlMeter.NAME))
     .StartWithHost();
 
