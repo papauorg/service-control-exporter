@@ -1,2 +1,2 @@
-sc.exe create "ServiceControlExporter" startup= delayed-auto binpath="$(pwd)/service-control-exporter.exe"
-# sc.exe failure "ServiceControlExporter" reset=0 actions=restart/60000/restart/60000/run/1000
+$Command = 'sc.exe create "{0}" binpath= "{1}" displayname= "{2}" start= "delayed-auto"' -f "ServiceControlExporter","$(pwd)/service-control-exporter.exe","ServiceControl metrics exporter"
+Invoke-Expression $Command
