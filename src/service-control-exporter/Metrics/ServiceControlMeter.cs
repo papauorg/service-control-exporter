@@ -19,8 +19,8 @@ internal class ServiceControlMeter
         ObservableMetrics = observableMetrics ?? throw new ArgumentNullException(nameof(observableMetrics));
 
         Meter = new(ServiceControlMeter.NAME, "1.0");
-        ErrorMessagesPerEndpoint = Meter.CreateObservableGauge("ErrorMessagesPerEndpoint", () => ToMeasurements(ObservableMetrics.MessagesPerEndpoint, "endpoint"), unit: "Messages", description: "Shows the amount of error messages per endpoint that require manual review.");
-        ErrorMessagesPerMessageType = Meter.CreateObservableGauge("ErrorMessagesPerType", () => ToMeasurements(ObservableMetrics.MessagesPerMessageType, "type"), unit: "Messages", description: "Shows the amount of error messages per message type that require manual review.");
+        ErrorMessagesPerEndpoint = Meter.CreateObservableGauge("servicecontrolexporter_failed_messages_per_endpoint", () => ToMeasurements(ObservableMetrics.MessagesPerEndpoint, "endpoint"), unit: "messages", description: "Shows the amount of error messages per endpoint that require manual review.");
+        ErrorMessagesPerMessageType = Meter.CreateObservableGauge("servicecontrolexporter_failed_messages_per_type", () => ToMeasurements(ObservableMetrics.MessagesPerMessageType, "type"), unit: "messages", description: "Shows the amount of error messages per message type that require manual review.");
     }
 
     private static IEnumerable<Measurement<int>> ToMeasurements(ConcurrentDictionary<string, int> endpointGroups, string tagName)

@@ -27,7 +27,7 @@ public class MetricsEndpointTest : IntegrationTest
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        content.Should().Contain("ErrorMessagesPerEndpoint_Messages{endpoint=\"EndpointName\"} 1");
+        content.Should().Contain("servicecontrolexporter_failed_messages_per_endpoint_messages{endpoint=\"EndpointName\"} 1");
     }
 
     [Test]
@@ -43,7 +43,7 @@ public class MetricsEndpointTest : IntegrationTest
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        content.Should().Contain("ErrorMessagesPerType_Messages{type=\"MessageType\"} 1");
+        content.Should().Contain("servicecontrolexporter_failed_messages_per_type_messages{type=\"MessageType\"} 1");
     }
 
     [Test]
@@ -69,7 +69,7 @@ public class MetricsEndpointTest : IntegrationTest
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        content.Should().Contain("ErrorMessagesPerType_Messages{type=\"MessageType\"} 0");
-        content.Should().Contain("ErrorMessagesPerEndpoint_Messages{endpoint=\"EndpointName\"} 0");
+        content.Should().Contain("servicecontrolexporter_failed_messages_per_type_messages{type=\"MessageType\"} 0");
+        content.Should().Contain("servicecontrolexporter_failed_messages_per_endpoint_messages{endpoint=\"EndpointName\"} 0");
     }
 }

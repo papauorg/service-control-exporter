@@ -5,25 +5,25 @@ This tool provides prometheus style metrics for information provided by the Serv
 
 | Metric | Description | Source |
 | ------ | ------ | ---- |
-| ErrorMessagesPerEndpoint_Messages | Contains the messages that were sent to the error queue and retrieved by ServiceControl for further review. The messages are grouped by the target endpoint name. Metric is the amount of messages that are ready to be reviewed in ServicePulse.| api/recoverability/groups/Endpoint%20Name |
-| ErrorMessagesPerType_Messages | Contains the messages that were sent to the error queue and retrieved by ServiceControl for further review. The messages are grouped by the message type. Metric is the amount of messages that are ready to be reviewed in ServicePulse. | api/recoverability/groups/Message%20Type |
+| servicecontrolexporter_failed_messages_per_endpoint_messages | Contains the messages that were sent to the error queue and retrieved by ServiceControl for further review. The messages are grouped by the target endpoint name. Metric is the amount of messages that are ready to be reviewed in ServicePulse.| api/recoverability/groups/Endpoint%20Name |
+| servicecontrolexporter_failed_messages_per_type_messages | Contains the messages that were sent to the error queue and retrieved by ServiceControl for further review. The messages are grouped by the message type. Metric is the amount of messages that are ready to be reviewed in ServicePulse. | api/recoverability/groups/Message%20Type |
 
 ## Metrics endpoint
 The tool will expose a `/metrics` endpoint on its configured base url. The default is `http://localhost:5002`.
 
 ### Sample output
 ```text
-# TYPE ErrorMessagesPerEndpoint_Messages gauge
-# UNIT ErrorMessagesPerEndpoint_Messages Messages
-# HELP ErrorMessagesPerEndpoint_Messages Shows the amount of error messages per endpoint that require manual review.
-ErrorMessagesPerEndpoint_Messages{endpoint="SomeEndpoint"} 3 1675784613469
-ErrorMessagesPerEndpoint_Messages{endpoint="SomeOtherendpoint"} 1 1675784613469
+# TYPE servicecontrolexporter_failed_messages_per_endpoint_messages gauge
+# UNIT servicecontrolexporter_failed_messages_per_endpoint_messages messages
+# HELP servicecontrolexporter_failed_messages_per_endpoint_messages Shows the amount of error messages per endpoint that require manual review.
+servicecontrolexporter_failed_messages_per_endpoint_messages{endpoint="SomeEndpoint"} 3 1675784613469
+servicecontrolexporter_failed_messages_per_endpoint_messages{endpoint="SomeOtherendpoint"} 1 1675784613469
 
-# TYPE ErrorMessagesPerType_Messages gauge
-# UNIT ErrorMessagesPerType_Messages Messages
-# HELP ErrorMessagesPerType_Messages Shows the amount of error messages per message type that require manual review.
-ErrorMessagesPerType_Messages{endpoint="Some.Namespace.SomeCommand"} 3 1675784613469
-ErrorMessagesPerType_Messages{endpoint="Some.Other.Namespace.SomeOtherCommand"} 1 1675784613469
+# TYPE servicecontrolexporter_failed_messages_per_type_messages gauge
+# UNIT servicecontrolexporter_failed_messages_per_type_messages messages
+# HELP servicecontrolexporter_failed_messages_per_type_messages Shows the amount of error messages per message type that require manual review.
+servicecontrolexporter_failed_messages_per_type_messages{type="Some.Namespace.SomeCommand"} 3 1675784613469
+servicecontrolexporter_failed_messages_per_type_messages{type="Some.Other.Namespace.SomeOtherCommand"} 1 1675784613469
 
 # EOF
 ```
